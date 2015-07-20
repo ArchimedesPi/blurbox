@@ -9,21 +9,30 @@
     var settings = $.extend( {}, defaults, options );
 
     return this.each(function() {
-      g=guid();
-      $(this).attr('u', g);
+      element_guild=guid(); // make up a new guid to identify the element
+      $(this).attr('u', element_guid);
       p=$(this).parent();
       c=$(this).attr('class');
       html=$(this).clone().wrap('<div>').parent().html();
       
-      $(p).on('click', '[u='+g+']', function() {
+      // when the element is clicked
+      $(p).on('click', '[u='+element_guid+']', function() {
         $(this).fadeOut('fast', function() {
-          content = $(this).html().trim();
-          $(this).replaceWith('<input type="text" class="form-control editor '+c+'" u="'+g+'" placeholder="'+content+'" style="display:none">').hide();
-          $('[u='+g+']').val(content).fadeIn().focus();
+          content = $(this).html().trim(); // grab the originial element's content
+          // make a new textbox
+          $(this).replaceWith('<input type="text" class="form-control editor '+c
+            +'" u="'+element_guid+'" placeholder="'
+            +content+'" style="display:none">').hide();
+          
+          // add the content originally in the element to the textbox
+          // and fade in and focus
+          $('[u='+g+']').val(content).fadeIn().focus(); 
+          
+          // when the text-box is left (blurred)
           $(p).on('blur', '[u='+g+']', function() {
-            v = $(this).val();
-            $(this).replaceWith(html)
-            $('[u='+g+']').html(v);
+            value = $(this).val(); // grab the value that was entered
+            $(this).replaceWith(html); // flip back to a text box
+            $('[u='+g+']').html(value); // target the element we want, and put the value that was entered back in
           });
         });
       });
@@ -38,6 +47,6 @@
       .substring(1);
     }
     return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-  s4() + '-' + s4() + s4() + s4();
+      s4() + '-' + s4() + s4() + s4();
   }
 }(jQuery));
